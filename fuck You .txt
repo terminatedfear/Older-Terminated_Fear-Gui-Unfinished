@@ -1,0 +1,463 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+
+-- Main GUI Setup
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "TerminatedFearGui 0.0.3 version"
+gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Main Frame
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 350)
+frame.Position = UDim2.new(0.03, 0, 0.2, 0)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Visible = false
+frame.ClipsDescendants = true
+
+-- Add rounded corners
+local corner = Instance.new("UICorner", frame)
+corner.CornerRadius = UDim.new(0, 8)
+
+-- Add subtle drop shadow
+local shadow = Instance.new("ImageLabel", frame)
+shadow.Name = "Shadow"
+shadow.BackgroundTransparency = 1
+shadow.Size = UDim2.new(1, 10, 1, 10)
+shadow.Position = UDim2.new(0, -5, 0, -5)
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+shadow.ImageTransparency = 0.8
+shadow.ScaleType = Enum.ScaleType.Slice
+shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+shadow.ZIndex = -1
+
+-- Header with gradient
+local header = Instance.new("Frame", frame)
+header.Size = UDim2.new(1, 0, 0, 40)
+header.Position = UDim2.new(0, 0, 0, 0)
+header.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+header.BorderSizePixel = 0
+
+local headerCorner = Instance.new("UICorner", header)
+headerCorner.CornerRadius = UDim.new(0, 8)
+
+local gradient = Instance.new("UIGradient", header)
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 150)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 100, 100))
+})
+gradient.Rotation = 90
+
+-- Logo and Title
+local logo = Instance.new("ImageLabel", header)
+logo.Size = UDim2.new(0, 30, 0, 30)
+logo.Position = UDim2.new(0, 5, 0.5, -15)
+logo.BackgroundTransparency = 1
+logo.Image = "rbxassetid://16061940887"
+
+local title = Instance.new("TextLabel", header)
+title.Size = UDim2.new(1, -40, 1, 0)
+title.Position = UDim2.new(0, 40, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "TERMINATED_FEAR"
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Tab Buttons
+local tabButtons = Instance.new("Frame", frame)
+tabButtons.Size = UDim2.new(1, 0, 0, 30)
+tabButtons.Position = UDim2.new(0, 0, 0, 40)
+tabButtons.BackgroundTransparency = 1
+
+local tabMain = Instance.new("TextButton", tabButtons)
+tabMain.Size = UDim2.new(0.33, 0, 1, 0)
+tabMain.Position = UDim2.new(0, 0, 0, 0)
+tabMain.Text = "MAIN"
+tabMain.Font = Enum.Font.GothamBold
+tabMain.TextSize = 14
+tabMain.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+tabMain.TextColor3 = Color3.fromRGB(0, 255, 255)
+tabMain.AutoButtonColor = false
+
+local tabCornerMain = Instance.new("UICorner", tabMain)
+tabCornerMain.CornerRadius = UDim.new(0, 0)
+
+local tabAuto = Instance.new("TextButton", tabButtons)
+tabAuto.Size = UDim2.new(0.33, 0, 1, 0)
+tabAuto.Position = UDim2.new(0.33, 0, 0, 0)
+tabAuto.Text = "AUTO"
+tabAuto.Font = Enum.Font.GothamBold
+tabAuto.TextSize = 14
+tabAuto.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+tabAuto.TextColor3 = Color3.fromRGB(255, 255, 255)
+tabAuto.AutoButtonColor = false
+
+local tabCornerAuto = Instance.new("UICorner", tabAuto)
+tabCornerAuto.CornerRadius = UDim.new(0, 0)
+
+local tabPremium = Instance.new("TextButton", tabButtons)
+tabPremium.Size = UDim2.new(0.34, 0, 1, 0)
+tabPremium.Position = UDim2.new(0.66, 0, 0, 0)
+tabPremium.Text = "PREMIUM"
+tabPremium.Font = Enum.Font.GothamBold
+tabPremium.TextSize = 14
+tabPremium.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+tabPremium.TextColor3 = Color3.fromRGB(255, 215, 0)
+tabPremium.AutoButtonColor = false
+
+local tabCornerPremium = Instance.new("UICorner", tabPremium)
+tabCornerPremium.CornerRadius = UDim.new(0, 0)
+
+-- Tab Indicator
+local tabIndicator = Instance.new("Frame", tabButtons)
+tabIndicator.Size = UDim2.new(0.33, 0, 0, 3)
+tabIndicator.Position = UDim2.new(0, 0, 1, -3)
+tabIndicator.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+tabIndicator.BorderSizePixel = 0
+
+-- Pages
+local mainPage = Instance.new("ScrollingFrame", frame)
+mainPage.Size = UDim2.new(1, 0, 1, -70)
+mainPage.Position = UDim2.new(0, 0, 0, 70)
+mainPage.BackgroundTransparency = 1
+mainPage.Visible = true
+mainPage.ScrollBarThickness = 5
+mainPage.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+mainPage.CanvasSize = UDim2.new(0, 0, 0, 300)
+
+local autoPage = mainPage:Clone()
+autoPage.Parent = frame
+autoPage.Visible = false
+
+local premiumPage = mainPage:Clone()
+premiumPage.Parent = frame
+premiumPage.Visible = false
+
+-- Tab Switching Function
+local function switchTab(tabName)
+    mainPage.Visible = false
+    autoPage.Visible = false
+    premiumPage.Visible = false
+    
+    if tabName == "main" then
+        mainPage.Visible = true
+        tabIndicator:TweenPosition(UDim2.new(0, 0, 1, -3), "Out", "Quad", 0.2)
+        tabIndicator:TweenSize(UDim2.new(0.33, 0, 0, 3), "Out", "Quad", 0.2)
+        
+        tabMain.TextColor3 = Color3.fromRGB(0, 255, 255)
+        tabAuto.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabPremium.TextColor3 = Color3.fromRGB(255, 215, 0)
+    elseif tabName == "auto" then
+        autoPage.Visible = true
+        tabIndicator:TweenPosition(UDim2.new(0.33, 0, 1, -3), "Out", "Quad", 0.2)
+        tabIndicator:TweenSize(UDim2.new(0.33, 0, 0, 3), "Out", "Quad", 0.2)
+        
+        tabMain.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabAuto.TextColor3 = Color3.fromRGB(0, 255, 255)
+        tabPremium.TextColor3 = Color3.fromRGB(255, 215, 0)
+    elseif tabName == "premium" then
+        premiumPage.Visible = true
+        tabIndicator:TweenPosition(UDim2.new(0.66, 0, 1, -3), "Out", "Quad", 0.2)
+        tabIndicator:TweenSize(UDim2.new(0.34, 0, 0, 3), "Out", "Quad", 0.2)
+        
+        tabMain.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabAuto.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabPremium.TextColor3 = Color3.fromRGB(0, 255, 255)
+    end
+end
+
+-- Tab Button Connections
+tabMain.MouseButton1Click:Connect(function()
+    switchTab("main")
+end)
+
+tabAuto.MouseButton1Click:Connect(function()
+    switchTab("auto")
+end)
+
+tabPremium.MouseButton1Click:Connect(function()
+    switchTab("premium")
+end)
+
+-- Button Style Function
+local function createButton(parent, text, positionY, color)
+    local button = Instance.new("TextButton", parent)
+    button.Size = UDim2.new(0.9, 0, 0, 40)
+    button.Position = UDim2.new(0.05, 0, 0, positionY)
+    button.Text = text
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = color or Color3.fromRGB(40, 40, 40)
+    button.AutoButtonColor = false
+    
+    local corner = Instance.new("UICorner", button)
+    corner.CornerRadius = UDim.new(0, 6)
+    
+    local stroke = Instance.new("UIStroke", button)
+    stroke.Color = Color3.fromRGB(60, 60, 60)
+    stroke.Thickness = 1
+    
+    -- Hover effects
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(
+            math.min(button.BackgroundColor3.R * 255 + 20, 255),
+            math.min(button.BackgroundColor3.G * 255 + 20, 255),
+            math.min(button.BackgroundColor3.B * 255 + 20, 255)
+        )}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = color or Color3.fromRGB(40, 40, 40)}):Play()
+    end)
+    
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(
+            math.max(button.BackgroundColor3.R * 255 - 20, 0),
+            math.max(button.BackgroundColor3.G * 255 - 20, 0),
+            math.max(button.BackgroundColor3.B * 255 - 20, 0)
+        )}):Play()
+    end)
+    
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = color or Color3.fromRGB(40, 40, 40)}):Play()
+    end)
+    
+    return button
+end
+
+-- Main Page Content
+local heightLabel = Instance.new("TextLabel", mainPage)
+heightLabel.Size = UDim2.new(0.9, 0, 0, 30)
+heightLabel.Position = UDim2.new(0.05, 0, 0, 10)
+heightLabel.BackgroundTransparency = 1
+heightLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+heightLabel.Font = Enum.Font.GothamBold
+heightLabel.TextSize = 16
+heightLabel.Text = "HEIGHT: 0"
+heightLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local toggleAutoJump = createButton(mainPage, "AUTO JUMP: OFF", 50)
+local tpButton = createButton(mainPage, "TELEPORT TO 1M", 100, Color3.fromRGB(0, 100, 150))
+
+-- Auto Page Content
+local autoFast = createButton(autoPage, "AUTO DRINK (FAST): OFF", 10)
+local autoSlow = createButton(autoPage, "AUTO DRINK (SLOW): OFF", 60)
+
+-- Premium Page Content
+local comingSoon = Instance.new("TextLabel", premiumPage)
+comingSoon.Size = UDim2.new(0.9, 0, 0, 200)
+comingSoon.Position = UDim2.new(0.05, 0, 0.2, 0)
+comingSoon.BackgroundTransparency = 1
+comingSoon.Text = "PREMIUM FEATURES\nCOMING SOON!"
+comingSoon.Font = Enum.Font.GothamBlack
+comingSoon.TextSize = 20
+comingSoon.TextColor3 = Color3.fromRGB(255, 215, 0)
+comingSoon.TextStrokeTransparency = 0.7
+comingSoon.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+comingSoon.TextYAlignment = Enum.TextYAlignment.Top
+comingSoon.TextWrapped = true
+
+-- Footer
+local footer = Instance.new("TextLabel", frame)
+footer.Size = UDim2.new(1, 0, 0, 20)
+footer.Position = UDim2.new(0, 0, 1, -20)
+footer.BackgroundTransparency = 1
+footer.Text = "Right Shift to Toggle"
+footer.Font = Enum.Font.Gotham
+footer.TextSize = 12
+footer.TextColor3 = Color3.fromRGB(150, 150, 150)
+
+-- Initial tab setup
+switchTab("main")
+
+-- Your existing functionality remains the same below...
+-- [Previous boost(), useDrink(), hookTool(), and other functions remain unchanged]
+
+local function boost()
+    local char = player.Character
+    if char then
+        local hum = char:FindFirstChildWhichIsA("Humanoid")
+        if hum then
+            hum.UseJumpPower = true
+            hum.JumpPower = 9999999999
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+    local stats = player:FindFirstChild("leaderstats")
+    if stats then
+        local power = stats:FindFirstChild("Power")
+        if power then
+            power.Value = 9999999999
+        end
+    end
+end
+
+local function useDrink()
+    local drinkTool
+    for _, tool in ipairs(player.Backpack:GetChildren()) do
+        if tool:IsA("Tool") and tool.Name:lower():find("drink") then
+            drinkTool = tool
+            break
+        end
+    end
+    if not drinkTool and player.Character then
+        for _, tool in ipairs(player.Character:GetChildren()) do
+            if tool:IsA("Tool") and tool.Name:lower():find("drink") then
+                drinkTool = tool
+                break
+            end
+        end
+    end
+    if drinkTool and player.Character then
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:EquipTool(drinkTool)
+            pcall(function()
+                drinkTool:Activate()
+            end)
+        end
+    end
+end
+
+local function hookTool(tool)
+    if tool.Name == "Jump" then
+        tool.Activated:Connect(boost)
+    end
+end
+
+for _, tool in ipairs(player.Backpack:GetChildren()) do
+    hookTool(tool)
+end
+player.Backpack.ChildAdded:Connect(hookTool)
+
+local autoJump, fastOn, slowOn = false, false, false
+
+toggleAutoJump.MouseButton1Click:Connect(function()
+    autoJump = not autoJump
+    toggleAutoJump.Text = "AUTO JUMP: " .. (autoJump and "ON" or "OFF")
+    toggleAutoJump.BackgroundColor3 = autoJump and Color3.fromRGB(0, 120, 120) or Color3.fromRGB(40, 40, 40)
+end)
+
+autoFast.MouseButton1Click:Connect(function()
+    fastOn = not fastOn
+    if fastOn then
+        slowOn = false
+        autoSlow.Text = "AUTO DRINK (SLOW): OFF"
+        autoSlow.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    end
+    autoFast.Text = "AUTO DRINK (FAST): " .. (fastOn and "ON" or "OFF")
+    autoFast.BackgroundColor3 = fastOn and Color3.fromRGB(0, 120, 120) or Color3.fromRGB(40, 40, 40)
+end)
+
+autoSlow.MouseButton1Click:Connect(function()
+    slowOn = not slowOn
+    if slowOn then
+        fastOn = false
+        autoFast.Text = "AUTO DRINK (FAST): OFF"
+        autoFast.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    end
+    autoSlow.Text = "AUTO DRINK (SLOW): " .. (slowOn and "ON" or "OFF")
+    autoSlow.BackgroundColor3 = slowOn and Color3.fromRGB(0, 120, 120) or Color3.fromRGB(40, 40, 40)
+end)
+
+tpButton.MouseButton1Click:Connect(function()
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = CFrame.new(0, 1000000, 0)
+    end
+end)
+
+task.spawn(function()
+    while true do
+        if autoJump then
+            boost()
+        end
+        if fastOn then
+            useDrink(); task.wait(0.1)
+        elseif slowOn then
+            useDrink(); task.wait(1)
+        else
+            task.wait(0.2)
+        end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        local y = char.HumanoidRootPart.Position.Y
+        heightLabel.Text = "HEIGHT: " .. math.floor(y)
+    end
+end)
+
+UIS.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.RightShift then
+        frame.Visible = not frame.Visible
+    end
+end)
+
+-- Intro Animation
+local intro = Instance.new("Frame", gui)
+intro.Size = UDim2.new(0, 350, 0, 80)
+intro.Position = UDim2.new(0.5, -175, 0.5, -40)
+intro.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+intro.BackgroundTransparency = 1
+intro.ClipsDescendants = true
+
+local introCorner = Instance.new("UICorner", intro)
+introCorner.CornerRadius = UDim.new(0, 8)
+
+local introGradient = Instance.new("UIGradient", intro)
+introGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 100, 100)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 50, 50))
+})
+introGradient.Rotation = 90
+
+local introText = Instance.new("TextLabel", intro)
+introText.Size = UDim2.new(1, 0, 1, 0)
+introText.Text = "TERMINATED_FEAR LOADED"
+introText.Font = Enum.Font.GothamBlack
+introText.TextSize = 24
+introText.TextColor3 = Color3.fromRGB(0, 255, 255)
+introText.BackgroundTransparency = 1
+introText.TextStrokeTransparency = 0.7
+introText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+local introShadow = Instance.new("ImageLabel", intro)
+introShadow.Name = "Shadow"
+introShadow.BackgroundTransparency = 1
+introShadow.Size = UDim2.new(1, 10, 1, 10)
+introShadow.Position = UDim2.new(0, -5, 0, -5)
+introShadow.Image = "rbxassetid://1316045217"
+introShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+introShadow.ImageTransparency = 0.8
+introShadow.ScaleType = Enum.ScaleType.Slice
+introShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+introShadow.ZIndex = -1
+
+-- Animation sequence
+intro.BackgroundTransparency = 0
+TweenService:Create(intro, TweenInfo.new(0.5), {Size = UDim2.new(0, 400, 0, 90)}):Play()
+TweenService:Create(intro, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+wait(0.5)
+TweenService:Create(intro, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 80)}):Play()
+wait(2)
+TweenService:Create(intro, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+TweenService:Create(introText, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+wait(0.5)
+intro:Destroy()
+
+frame.Visible = true
+game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer("Terminated_Fear Gui Loaded!", "All")
